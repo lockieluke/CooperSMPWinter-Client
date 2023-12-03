@@ -9,7 +9,7 @@ version = project.mod_version
 group = project.maven_group
 
 base {
-    archivesName = project.archives_base_name
+    archivesName.set(project.archives_base_name)
 }
 
 configurations {
@@ -88,7 +88,7 @@ tasks.processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-    it.options.release = 17
+    it.options.release.set(17)
 }
 
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
@@ -108,13 +108,13 @@ java {
 }
 
 tasks.remapJar {
-    addNestedDependencies = true
+    addNestedDependencies.set(true)
 }
 
 def dependsDir = "build/libs/dependencies"
 
 tasks.register("copyDependencies", Copy) {
-    configurations.externalImplementation.canBeResolved = true
+    configurations.externalImplementation.canBeResolved.set(true)
     from configurations.externalImplementation
     into "$dependsDir"
 }
