@@ -79,7 +79,7 @@ dependencies {
     // modImplementation("net.fabricmc.fabric-api:fabric-api-deprecated:${project.fabric_version}")
 }
 
-processResources {
+tasks.processResources {
     inputs.property "version", project.version
 
     filesMatching("fabric.mod.json") {
@@ -107,7 +107,7 @@ java {
     targetCompatibility = JavaVersion.VERSION_17
 }
 
-remapJar {
+tasks.remapJar {
     addNestedDependencies = true
 }
 
@@ -119,9 +119,9 @@ tasks.register("copyDependencies", Copy) {
     into "$dependsDir"
 }
 
-remapJar.dependsOn(tasks.named("copyDependencies"))
+tasks.remapJar.dependsOn(tasks.named("copyDependencies"))
 
-jar {
+tasks.jar {
     from("LICENSE") {
         rename { "${it}_${project.base.archivesName.get()}" }
     }
