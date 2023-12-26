@@ -18,7 +18,7 @@ public class SoundManagerMixin {
             AudioEngine.Companion.getShared().setScale(volume);
             MinecraftClient client = MinecraftClient.getInstance();
             if (client.player != null) {
-                AudioEngine.Companion.getShared().adjustVolumes(client.player.getPos());
+                AudioEngine.Companion.getShared().adjustVolumes(client.player.getPos(), true);
             }
         }
     }

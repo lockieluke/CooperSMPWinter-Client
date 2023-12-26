@@ -68,6 +68,17 @@ class CommunicationEngine {
                 this.audioEngine.audioDefinitions = this.audioEngine.audioDefinitions.filter { it.audioSourceUUID != audioSource.uuid }.toTypedArray()
                 Log.info("Received audio source removal for ${audioSource.uuid}")
             }
+
+            if (commandWord == "MAKE_SPEAKER_GLOBAL") {
+                val audioSourceUUID = payload.replace("$commandWord ", "")
+                this.audioEngine.makeSpeakerGlobal(audioSourceUUID)
+                Log.info("Received make speaker global command")
+            }
+
+            if (commandWord == "RESET_GLOBAL_SPEAKERS") {
+                this.audioEngine.resetGlobalSpeakers()
+                Log.info("Received reset global speakers command")
+            }
         }
     }
 

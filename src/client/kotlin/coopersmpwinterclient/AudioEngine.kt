@@ -12,7 +12,7 @@ import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
 @Serializable
-data class AudioSource(val x: Int, val y: Int, val z: Int, val world: String, val uuid: String)
+data class AudioSource(val x: Int, val y: Int, val z: Int, val world: String, val uuid: String, val global: Boolean = false)
 
 @Serializable
 data class AudioStreamDefinition(val audioName: String, val audioPacketsCount: Int, val audioUUID: String, val audioSize: Int, val audioSourceUUID: String)
@@ -95,9 +95,13 @@ class AudioEngine {
         this.streamPlayers[audioSourceUUID]?.stop()
     }
 
-    fun adjustVolumes(location: Vec3d = MinecraftClient.getInstance().player!!.pos) {
+    @JvmOverloads
+    fun adjustVolumes(location: Vec3d = MinecraftClient.getInstance().player!!.pos, force: Boolean = false) {
         this.streamPlayers.forEach { (uuid, streamPlayer) ->
             val audioSource = this.audioSources.first { it.uuid == uuid }
+            if (audioSource.global && !force)
+                return@forEach
+
             val distance = location.distanceTo(Vec3d(audioSource.x.toDouble(), audioSource.y.toDouble(), audioSource.z.toDouble()))
             // The higher the divisor, the more far the audio travels
             val volume = 1.0 - (distance / 10.0).coerceIn(0.0, 1.0)
@@ -106,12 +110,27 @@ class AudioEngine {
         }
     }
 
+    fun adjustYaw(yaw: Float) {
+        this.streamPlayers.forEach { (_, streamPlayer) ->
+//            streamPlayer.setPan(yaw)
+        }
+    }
+
+    fun makeSpeakerGlobal(audioSourceUUID: String) {
+        this.resetGlobalSpeakers()
+        this.audioSources = this.audioSources.map { if (it.uuid == audioSourceUUID) it.copy(global = true) else it }.toTypedArray()
+    }
+
     fun cleanup() {
         this.streamPlayers.forEach { it.value.stop() }
         this.streamPlayers = mutableMapOf()
         this.audioSources = arrayOf()
         this.audioDefinitions = arrayOf()
         this.audioPlaybackPackets = arrayOf()
+    }
+
+    fun resetGlobalSpeakers() {
+        this.audioSources = this.audioSources.map { it.copy(global = false) }.toTypedArray()
     }
 
 }
