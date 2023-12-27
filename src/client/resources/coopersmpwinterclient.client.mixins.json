@@ -1,15 +1,18 @@
 {
-	"required": true,
-	"package": "coopersmpwinterclient.mixin.client",
-	"compatibilityLevel": "JAVA_17",
-	"client": [
-		"MinecraftClientMixin",
-		"SoundManagerMixin"
-	],
-	"injectors": {
-		"defaultRequire": 1
-	},
-	"mixins": [
-		"PlayerEntityMixin"
-	]
+  "required": true,
+  "package": "coopersmpwinterclient.mixin.client",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "MinecraftClientMixin",
+    "OptionsScreenMixin",
+    "SoundManagerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "PlayerEntityMixin",
+    "YggdrasilMinecraftSessionServiceMixin",
+    "YggdrasilServicesKeyInfoMixin"
+  ]
 }

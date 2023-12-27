@@ -45,6 +45,9 @@ dependencies {
 
     modImplementation("net.kyori:adventure-platform-fabric:5.10.0") { include(this) }
 
+    implementation("io.github.llamalad7:mixinextras-fabric:0.3.2") { annotationProcessor(this) { include(this) } }
+    modApi("me.shedaniel.cloth:cloth-config-fabric:12.0.119")
+
     implementation("com.github.goxr3plus:java-stream-player:10.0.2") { externalImplementation(this) }
     implementation("com.github.goxr3plus:jaudiotagger:2.2.7") { include(this) }
     implementation("com.mpatric:mp3agic:0.9.1") { include(this) }
@@ -64,6 +67,9 @@ repositories {
         name = "sonatype-oss-snapshots1"
         url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
     }
+
+    maven { url = uri("https://maven.shedaniel.me/") }
+    maven { url = uri("https://maven.terraformersmc.com/releases/") }
 }
 
 tasks {

@@ -1,9 +1,10 @@
 package coopersmpwinterclient
 
+import me.shedaniel.autoconfig.AutoConfig
+import me.shedaniel.autoconfig.annotation.Config
+import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.toast.Toast
 
 object Main : ClientModInitializer {
 	private val communicationEngine = CommunicationEngine()
@@ -16,5 +17,13 @@ object Main : ClientModInitializer {
 		ClientPlayConnectionEvents.DISCONNECT.register(ClientPlayConnectionEvents.Disconnect { handler, client ->
 			communicationEngine.unregisterChannel()
 		})
+
+		AutoConfig.register(coopersmpwinterclient.Config::class.java
+		) { definition: Config?, configClass: Class<coopersmpwinterclient.Config?>? ->
+			JanksonConfigSerializer(
+				definition,
+				configClass
+			)
+		}
 	}
 }
