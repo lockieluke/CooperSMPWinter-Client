@@ -1,7 +1,6 @@
 package coopersmpwinterclient.mixin.client;
 
 import coopersmpwinterclient.AudioEngine;
-import coopersmpwinterclient.Log;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
 import org.spongepowered.asm.mixin.Mixin;
@@ -38,13 +37,11 @@ public class PlayerEntityMixin {
         float yaw = player.getYaw();
         float pitch = player.getPitch();
 
-        Vec3d heading = player.getRotationVec(1.0F);
+//        Vec3d heading = player.getRotationVec(1.0F);
 
         if (yaw != this.previousYaw || pitch != this.previousPitch) {
-            Log.Companion.info(String.format("Yaw: %f, Pitch: %f, Heading: %s", yaw, pitch, heading.toString()));
+            this.previousYaw = yaw;
+            this.previousPitch = pitch;
         }
-
-        this.previousYaw = yaw;
-        this.previousPitch = pitch;
     }
 }

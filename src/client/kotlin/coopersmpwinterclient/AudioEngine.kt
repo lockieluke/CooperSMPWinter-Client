@@ -4,6 +4,7 @@ import com.goxr3plus.streamplayer.stream.Outlet
 import com.goxr3plus.streamplayer.stream.StreamPlayer
 import kotlinx.serialization.Serializable
 import net.minecraft.client.MinecraftClient
+import net.minecraft.sound.SoundCategory
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.Vec3d
 import java.util.*
@@ -15,7 +16,7 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 data class AudioSource(val x: Int, val y: Int, val z: Int, val world: String, val uuid: String, val global: Boolean = false)
 
 @Serializable
-data class AudioStreamDefinition(val audioName: String, val audioPacketsCount: Int, val audioUUID: String, val audioSize: Int, val audioSourceUUID: String)
+data class AudioStreamDefinition(val audioName: String, val audioPacketsCount: Int, val audioUUID: String, val audioSize: Int, val audioSourceUUID: String, val durationInSeconds: Int)
 
 data class AudioPlaybackPacket(val audioUUID: UUID, val audioPacketIndex: Int, val encodedAudioPacket: String)
 
@@ -78,6 +79,7 @@ class AudioEngine {
                     }
 
                     this.adjustVolumes()
+                    Log.info("Audio is ${audioDefinition.durationInSeconds} seconds long")
                 } else {
                     Log.info("Audio packet size ${audioPacket.size} does not match audio definition size ${audioDefinition.audioSize}")
                 }
@@ -97,6 +99,7 @@ class AudioEngine {
 
     @JvmOverloads
     fun adjustVolumes(location: Vec3d = MinecraftClient.getInstance().player!!.pos, force: Boolean = false) {
+        this.scale = MinecraftClient.getInstance().options.getSoundVolumeOption(SoundCategory.RECORDS).value.coerceIn(0.0, 1.0)
         this.streamPlayers.forEach { (uuid, streamPlayer) ->
             val audioSource = this.audioSources.first { it.uuid == uuid }
             if (audioSource.global && !force)
@@ -107,12 +110,6 @@ class AudioEngine {
             val volume = 1.0 - (distance / 10.0).coerceIn(0.0, 1.0)
 
             streamPlayer.setGain(volume.round(2) * this.scale)
-        }
-    }
-
-    fun adjustYaw(yaw: Float) {
-        this.streamPlayers.forEach { (_, streamPlayer) ->
-//            streamPlayer.setPan(yaw)
         }
     }
 
