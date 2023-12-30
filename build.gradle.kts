@@ -48,7 +48,11 @@ dependencies {
     implementation("io.github.llamalad7:mixinextras-fabric:0.3.2") { annotationProcessor(this) { include(this) } }
     modApi("me.shedaniel.cloth:cloth-config-fabric:12.0.119")
 
-    implementation("com.github.goxr3plus:java-stream-player:10.0.2") { externalImplementation(this) }
+    implementation("com.github.goxr3plus:java-stream-player:10.0.2") {
+        exclude(group = "maven:commons-io", module = "commons-io")
+        implementation("commons-io:commons-io:2.15.1")
+        externalImplementation(this)
+    }
     implementation("com.github.goxr3plus:jaudiotagger:2.2.7") { include(this) }
     implementation("com.mpatric:mp3agic:0.9.1") { include(this) }
     implementation("com.googlecode.soundlibs:mp3spi:1.9.5-1") { include(this) }
@@ -70,7 +74,9 @@ repositories {
 
     maven { url = uri("https://maven.shedaniel.me/") }
     maven { url = uri("https://maven.terraformersmc.com/releases/") }
-}
+    maven {
+        url = uri("https://mcef-download.cinemamod.com/repositories/releases")
+    }}
 
 tasks {
     jar {
